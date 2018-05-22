@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Friends.Models.FriendModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table" id="friendsTable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MestoNaZiveenje)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MestoNaZiveenje)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.Id })
+         
+            @if (User.IsInRole(d5.Models.Roles.Administrator) || User.IsInRole(d5.Models.Roles.Manager))
+                {
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                <button class="btn-link js-delete" atr=@item.Id>Delete</button>
+
+                }
+            </td>
+
+        </tr>
+}
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+
+        $(document).on("ready", function () {
+            $("#friendsTable").dataTable();
+        });
+
+        $("#friendsTable .js-delete").on("click", function () {
+            var trtoDelete = $(this).closest('tr');
+            $.ajax({
+                url: "api/FriendModels1/" + $(this).attr('atr'),
+                method: "DELETE",
+                success: function (object, status, xhr) {
+                    if (xhr.getResponseHeader("X-Responded-JSON") != null
+                        && JSON.parse(xhr.getResponseHeader("X-Responded-JSON")).status == "401") {
+                        alert("Немате привилеѓии за оваа акција.");
+                    }
+                    else {
+                        trtoDelete.remove();
+                    }
+                    
+                }
+        });
+        });
+    </script>
+    }

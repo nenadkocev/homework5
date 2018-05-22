@@ -1,0 +1,17 @@
+﻿@model d5.Models.AddUserToRoleModel
+@{
+    ViewBag.Title = "Add User to Role";
+}
+
+<h2>AddUserToRole</h2>
+
+
+@using (Html.BeginForm("AddUserToRole")) {
+        @Html.LabelFor(m => m.email)
+            @Html.TextBoxFor(m => m.email, new { @class = "form-control"})<br />
+            @Html.Label("Select role")  
+            @Html.DropDownListFor(m => m.selectedRole, new SelectList(Model.roles), new { @class = "form-control"})
+    <br />
+            <input type = "submit" class="btn btn-warning" value="Add" />
+}
+
